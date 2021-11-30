@@ -1,5 +1,6 @@
-import React from "react";
-import TodoItem from "./TodoItem";
+import React from 'react';
+import TodoItem from './TodoItem';
+/* eslint-disable */
 class TodosList extends React.Component {
   render() {
     return (
@@ -18,3 +19,4 @@ class TodosList extends React.Component {
 }
 
 export default TodosList;
+/* eslint-disable */

@@ -1,5 +1,5 @@
-import React from "react";
-
+import React from 'react';
+/* eslint-disable */
 class TodoItem extends React.Component {
   render() {
     return (
@@ -20,3 +20,4 @@ class TodoItem extends React.Component {
 }
 
 export default TodoItem;
+/* eslint-disable */
