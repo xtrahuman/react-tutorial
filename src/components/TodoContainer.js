@@ -1,105 +1,47 @@
-import React, { useState, useEffect } from "react";
-import { Route, Routes } from "react-router-dom"
-import Header from "./Header";
-import InputTodo from "./InputTodo";
-import TodosList from "./TodosList";
-import { v4 as uuidv4 } from "uuid";
-import About from "../pages/About";
-import NotMatch from "../pages/NotMatch";
-import Navbar from "./Navbar"
+import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 
-const TodoContainer = () => {
-  // const [todos, setTodos] = useState([])
+const InputTodo = (props) => {
+  InputTodo.propTypes = {
+    addTodoProps: PropTypes.string.isRequired,
+  };
+  const [inputText, setInputText] = useState({
+    title: '',
+  });
 
-  // useEffect(() => {
-  //   console.log("test run")
-
-  //   // getting stored items
-  //   const temp = localStorage.getItem("todos")
-  //   const loadedTodos = JSON.parse(temp)
-
-  //   if (loadedTodos) {
-  //     setTodos(loadedTodos)
-  //   }
-  // }, [setTodos])
-  const [todos, setTodos] = useState(getInitialTodos());
-
-  function getInitialTodos() {
-    // getting stored items
-    const temp = localStorage.getItem("todos");
-    const savedTodos = JSON.parse(temp);
-    return savedTodos || [];
-  }
-
-  useEffect(() => {
-    // storing todos items
-    const temp = JSON.stringify(todos);
-    localStorage.setItem("todos", temp);
-  }, [todos]);
-
-  const handleChange = (id) => {
-    setTodos((prevState) =>
-      prevState.map((todo) => {
-        if (todo.id === id) {
-          return {
-            ...todo,
-            completed: !todo.completed,
-          };
-        }
-        return todo;
-      })
-    );
+  const onChange = (e) => {
+    setInputText({
+      ...inputText,
+      [e.target.name]: e.target.value,
+    });
   };
 
-  const delTodo = (id) => {
-    setTodos([
-      ...todos.filter((todo) => {
-        return todo.id !== id;
-      }),
-    ]);
-  };
-
-  const addTodoItem = (title) => {
-    const newTodo = {
-      id: uuidv4(),
-      title: title,
-      completed: false,
-    };
-    setTodos([...todos, newTodo]);
-  };
-
-  const setUpdate = (updatedTitle, id) => {
-    setTodos(
-      todos.map((todo) => {
-        if (todo.id === id) {
-          todo.title = updatedTitle;
-        }
-        return todo;
-      })
-    );
+  const handleSubmit = (e) => {
+    const { addTodoProps } = props;
+    e.preventDefault();
+    if (inputText.title.trim()) {
+      addTodoProps(inputText.title);
+      setInputText({
+        title: '',
+      });
+    } else {
+      alert('Please write item');
+    }
   };
 
   return (
-   <>
-   <Navbar/>
-    <Routes>
-       <Route path="/" element={<div className="container">
-          <div className="inner">
-            <Header />
-            <InputTodo addTodoProps={addTodoItem} />
-            <TodosList
-              todos={todos}
-              handleChangeProps={handleChange}
-              deleteTodoProps={delTodo}
-              setUpdate={setUpdate}
-            />
-          </div>
-        </div>}/>
-        <Route path="/about" element={<About />}/>
-    <Route path="*" element={<NotMatch />}/>
-      </Routes>
-      </>  
+    <form onSubmit={handleSubmit} className="form-container">
+      <input
+        type="text"
+        className="input-text"
+        placeholder="Add todo..."
+        value={inputText.title}
+        name="title"
+        onChange={onChange}
+      />
+      <button type="button" className="input-submit">Submit</button>
+    </form>
   );
 };
 
-export default TodoContainer;
+export default InputTodo;
